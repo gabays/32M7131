@@ -82,7 +82,7 @@ Vous avez besoin d'un compte google pour utiliser colab (https://colab.research.
 }
 ```
 
-```
+```bibtex
 @article{schoch_dhq:_2017,
   author = {Schöch, Christof},
   title = {{DHQ}: {Digital} {Humanities} {Quarterly}: {Topic} {Modeling} {Genre}: {An} {Exploration} of {French} {Classical} and {Enlightenment} {Drama}},
