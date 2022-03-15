@@ -11,7 +11,10 @@ Les cours ont lieu
 * `Cours_01`: Introduction
 * `Cours_02`: Vers le quantitatif
 * `Cours_03`: Lemmatiser
-* `Cours_04`:
+* `Cours_04`: L'analyse de sentiment
+* `Cours_05`: Textométrie
+* `Cours_06`: Le réemploi
+
 
 ---
 ## Installation
