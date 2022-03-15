@@ -1,9 +1,10 @@
-Cours Stylométrie
+Cours stylistique numérique
 
 # L'analyse de sentiment
 
 Simon Gabay
-Neuchâtel
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Licence Creative Commons" style="border-width:0;float:right;\" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>
 
 ---
 # Introduction
@@ -81,7 +82,7 @@ qui permette d'analyser une phrase.
 
 Deux approches
 * La connotation positive ou négative d'un mot s'appelle la _polarité_
-* Le degré de positivité ou de négativité s'appelle _l'intensité_ (ou _valence_, dans son acception psyhologique et non syntaxique)
+* Le degré de positivité ou de négativité s'appelle _l'intensité_ (ou _valence_, dans son acception psychologique et non syntaxique)
 
 |                | Polarité | Intensité |
 |----------------|----------|-----------|
@@ -90,7 +91,7 @@ Deux approches
 | super          | Positive | 3         |
 | extraordinaire | Positive | 4         |
 
-La question de l'échelle pour mesurer la valence n'est pas simple: sur 4
+La question de l'échelle pour mesurer la valence n'est pas simple: sur 4?
 
 ---
 ## Subjectivité
@@ -223,7 +224,7 @@ Amine Abdaoui, Jérôme Azé, Sandra Bringay et Pascal Poncelet. "FEEL: French E
 ---
 ## Note
 
-Attention, il existe une multitude de lexiques, tous différents.Allez les regarder.
+Attention, il existe une multitude de lexiques, tous différents. Allez les regarder.
 
 * Bing
 * Afinn
@@ -237,7 +238,7 @@ Attention, il existe une multitude de lexiques, tous différents.Allez les regar
 ---
 ## Matthew L. Jockers
 
-Professeur de littérature, ex bras droit de Fr. Mortti, est le développeur du package _Syuzhet_ pour l'analyse de sentiment. _Syuzhet_ est une méthode un peu rustre, mais relativement efficace:
+Professeur de littérature, ex collaborateur de Fr. Moretti, est le développeur du package _Syuzhet_ pour l'analyse de sentiment. _Syuzhet_ est une méthode un peu rustre, mais relativement efficace:
 
 
 ---
@@ -258,5 +259,5 @@ Boyer, _Agamemnon_
 ---
 
 * _Loess smooth_ (régression loess) permet de produire des courbes lissées, ajustées à un nuage de point
-* _Syuzhet DCT_ (discrete cosine transformation) permet de réduire les arctefacts
+* _Syuzhet DCT_ (_discrete cosine transformation_) permet de réduire les arctefacts
 * _Rolling mean_ (moyenne mobile) est moyenne constamment recalculée
