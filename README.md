@@ -84,13 +84,13 @@ Vous avez besoin d'un compte google pour utiliser colab (https://colab.research.
 
 ```bibtex
 @article{schoch_dhq:_2017,
-  author = {Schöch, Christof},
-  title = {{DHQ}: {Digital} {Humanities} {Quarterly}: {Topic} {Modeling} {Genre}: {An} {Exploration} of {French} {Classical} and {Enlightenment} {Drama}},
-  journal = {Digital Humanities Quarterly},
-  year = {2017},
-  volume = {11},
-  number = {2},
-  url = {http://www.digitalhumanities.org/dhq/vol/11/2/000291/000291.html},
+	author = {Schöch, Christof},
+	title = {{DHQ}: {Digital} {Humanities} {Quarterly}: {Topic} {Modeling} {Genre}: {An} {Exploration} of {French} {Classical} and {Enlightenment} {Drama}},
+	journal = {Digital Humanities Quarterly},
+	year = {2017},
+	volume = {11},
+	number = {2},
+	url = {http://www.digitalhumanities.org/dhq/vol/11/2/000291/000291.html},
 }
 ```
 
