@@ -311,7 +311,7 @@ Regardons les mots qui sont catégorisés comme de la joie d'après FEEL
 head(FEEL$word[which(FEEL$joy==1)], n=50)
 ```
 
-Le lexique est (vraiment) loin d'êtr parfait: des mots comme _content_ ou _fier_ ne sont pas considéré comme relevant de la joie!
+Le lexique est (vraiment) loin d'être parfait: des mots comme _content_ ou _fier_ ne sont pas considéré comme relevant de la joie!
 
 ```{r}
 FEEL$joy[which(FEEL$word=="joie")]
