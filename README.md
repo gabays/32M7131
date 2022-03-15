@@ -30,11 +30,69 @@ Il faut ensuite télécharger _RStudio_: https://rstudio.com/products/rstudio/do
 
 ### TXM
 
-Vousa vez besoin de télécharger TXM : https://txm.gitpages.huma-num.fr/textometrie/
+Vous avez besoin de télécharger TXM : https://txm.gitpages.huma-num.fr/textometrie/
+
+### Google colab
+
+Vous avez besoin d'un compte google pour utiliser colab (https://colab.research.google.com/).
 
 
 ---
 ## Repères bibliographiques
+
+```bibtex
+@article{herrmann_revisiting_2015,
+	author = {Herrmann, J. Berenike and Schöch, Christof and van Dalen-Oskam, Karina},
+	title = {Revisiting Style, a Key Concept in Literary Studies},
+	volume = {9},
+	doi = {10.1515/jlt-2015-0003},
+	number = {1},
+	journaltitle = {Journal of Literary Theory},
+	urldate = {2021-06-09},
+	date = {2015-01-01},
+	url = {https://zenodo.org/record/50893},
+}
+```
+
+```bibtex
+@inproceedings{gabay_beyond_2021,
+	author = {Gabay, Simon},
+	title = {Beyond Idiolectometry? On Racine's Stylometric Signature},
+	booktitle = {Proceedings of the Conference on Computational Humanities Research 2021},
+	date = {2021-11}
+	eventtitle = {Conference on Computational Humanities Research 2021},
+	location = {Amsterdam, The Netherlands},
+	volume = {2989},
+	pages = {359--376},
+	publisher = {{CEUR} Workshop Proceedings},
+	url = {https://hal.archives-ouvertes.fr/hal-03402994/},
+}
+```
+
+```bibtex
+@incollection{douguet_les_2019,
+	author = {Douguet, Marc},
+	title = {Les hémistiches répétés chez Corneille},
+	location = {Rouen},
+	date = {2019},
+	edition = {Publications numériques du {CÉRÉdI}},
+	series = {Actes de colloques et journées d’étude},
+	number = {26},
+	url = {http://publis-shs.univ-rouen.fr/ceredi/index.php?id=957},
+}
+```
+
+```
+@article{schoch_dhq:_2017,
+  author = {Schöch, Christof},
+  title = {{DHQ}: {Digital} {Humanities} {Quarterly}: {Topic} {Modeling} {Genre}: {An} {Exploration} of {French} {Classical} and {Enlightenment} {Drama}},
+  journal = {Digital Humanities Quarterly},
+  year = {2017},
+  volume = {11},
+  number = {2},
+  url = {http://www.digitalhumanities.org/dhq/vol/11/2/000291/000291.html},
+}
+```
 
 ---
 ## Droits
