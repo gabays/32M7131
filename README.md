@@ -36,6 +36,10 @@ Vous avez besoin de télécharger TXM : https://txm.gitpages.huma-num.fr/textome
 
 Vous avez besoin d'un compte google pour utiliser colab (https://colab.research.google.com/).
 
+### Pyrrha
+
+Vous avez besoin d'un compte sur Pyrrha: https://dh.chartes.psl.eu/pyrrha/
+
 
 ---
 ## Repères bibliographiques
