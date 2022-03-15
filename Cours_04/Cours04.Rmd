@@ -11,6 +11,9 @@ output:
     theme: united
 ---
 
+<a style="float:right; width: 20%;" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licence Creative Commons" src="https://i.creativecommons.org/l/by/4.0/88x31.png"/></a>
+
+
 ```{r, setup, fig.show=hold, fig.margin=TRUE}
 if(!require("knitr")){
   install.packages("knitr")
