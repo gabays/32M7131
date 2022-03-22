@@ -71,7 +71,7 @@ Nous pouvons désormais charger le texte, et le modèle.
 
 ```{r}
 udpipe_model_french <- udpipe_load_model(file = "tools/french-gsd-ud-2.4-190531.udpipe")
-text_to_lemmatise <- readLines(file_name)
+text_to_lemmatise <- readLines(file_name, encoding="UTF-8")
 #variable pour les sauvegardes
 #nom de fichier sans extension
 file_name_noExt <- tools::file_path_sans_ext(file_name)
@@ -121,7 +121,7 @@ Amine Abdaoui, Jérôme Azé, Sandra Bringay et Pascal Poncelet. "FEEL: French E
 Cf. aussi the package R `rfeel`: https://github.com/ColinFay/rfeel
 
 ```{r}
-FEEL = read.csv("lexicons/FEEL-1_clean.csv")
+FEEL = read.csv("lexicons/FEEL-1_clean.csv", encoding="UTF-8")
 load("lexicons/sentiments_polarity.rda")
 load("lexicons/sentiments_score.rda")
 ```
@@ -146,7 +146,8 @@ head(text_to_analyse)
 # 2. Polarity scores
 
 ## Création du vecteur
-Nous utilisons la méthode de Bing pour étudier la polarité: chaque token est comparé à un lexique, où des mots sont catégorés comme positifs ou négatifs.
+
+Nous utilisons la méthode de Bing pour étudier la polarité: chaque token est comparé à un lexique, où des mots sont catégorisés comme positifs ou négatifs.
 
 ```{r}
 text_to_analyse_bing_vector <- get_sentiment(text_to_analyse, method = "bing", lexicon = FEEL)

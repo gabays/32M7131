@@ -1607,7 +1607,7 @@ div.tocify {
 <a class="sourceLine" id="cb9-3" title="3"><span class="co">#m&lt;-udpipe_download_model(language =  &quot;french-sequoia&quot;)</span></a></code></pre></div>
 <p>Nous pouvons désormais charger le texte, et le modèle.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">udpipe_model_french &lt;-<span class="st"> </span><span class="kw">udpipe_load_model</span>(<span class="dt">file =</span> <span class="st">&quot;tools/french-gsd-ud-2.4-190531.udpipe&quot;</span>)</a>
-<a class="sourceLine" id="cb10-2" title="2">text_to_lemmatise &lt;-<span class="st"> </span><span class="kw">readLines</span>(file_name)</a>
+<a class="sourceLine" id="cb10-2" title="2">text_to_lemmatise &lt;-<span class="st"> </span><span class="kw">readLines</span>(file_name, <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)</a>
 <a class="sourceLine" id="cb10-3" title="3"><span class="co">#variable pour les sauvegardes</span></a>
 <a class="sourceLine" id="cb10-4" title="4"><span class="co">#nom de fichier sans extension</span></a>
 <a class="sourceLine" id="cb10-5" title="5">file_name_noExt &lt;-<span class="st"> </span>tools<span class="op">::</span><span class="kw">file_path_sans_ext</span>(file_name)</a>
@@ -1662,7 +1662,7 @@ div.tocify {
 <h2>Charger un lexique</h2>
 <p>Amine Abdaoui, Jérôme Azé, Sandra Bringay et Pascal Poncelet. “FEEL: French Expanded Emotion Lexicon. Language Resources and Evaluation”, <em>LRE 2016</em>, pp 1-23. Cf. <a href="http://www.lirmm.fr/~abdaoui/FEEL" class="uri">http://www.lirmm.fr/~abdaoui/FEEL</a></p>
 <p>Cf. aussi the package R <code>rfeel</code>: <a href="https://github.com/ColinFay/rfeel" class="uri">https://github.com/ColinFay/rfeel</a></p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">FEEL =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;lexicons/FEEL-1_clean.csv&quot;</span>)</a>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">FEEL =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;lexicons/FEEL-1_clean.csv&quot;</span>, <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)</a>
 <a class="sourceLine" id="cb17-2" title="2"><span class="kw">load</span>(<span class="st">&quot;lexicons/sentiments_polarity.rda&quot;</span>)</a>
 <a class="sourceLine" id="cb17-3" title="3"><span class="kw">load</span>(<span class="st">&quot;lexicons/sentiments_score.rda&quot;</span>)</a></code></pre></div>
 <p>On peut jeter un petit coup d’œil à ces lexiques</p>
@@ -1681,7 +1681,7 @@ div.tocify {
 <h1>2. Polarity scores</h1>
 <div id="création-du-vecteur" class="section level2">
 <h2>Création du vecteur</h2>
-<p>Nous utilisons la méthode de Bing pour étudier la polarité: chaque token est comparé à un lexique, où des mots sont catégorés comme positifs ou négatifs.</p>
+<p>Nous utilisons la méthode de Bing pour étudier la polarité: chaque token est comparé à un lexique, où des mots sont catégorisés comme positifs ou négatifs.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">text_to_analyse_bing_vector &lt;-<span class="st"> </span><span class="kw">get_sentiment</span>(text_to_analyse, <span class="dt">method =</span> <span class="st">&quot;bing&quot;</span>, <span class="dt">lexicon =</span> FEEL)</a>
 <a class="sourceLine" id="cb20-2" title="2"><span class="kw">head</span>(text_to_analyse_bing_vector, <span class="dv">300</span>)</a></code></pre></div>
 <pre><code>##   [1]  0 -2  0  0  0  0  0  0  0  0 -1 -1 -2  1  0 -1  0  1 -1  0  0  1  0 -1 -1
