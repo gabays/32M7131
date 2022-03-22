@@ -14,7 +14,7 @@ output:
 <a style="float:right; width: 20%;" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licence Creative Commons" src="https://i.creativecommons.org/l/by/4.0/88x31.png"/></a>
 
 
-```{r, setup, fig.show=hold, fig.margin=TRUE}
+```{r, setup, fig.margin=TRUE}
 if(!require("knitr")){
   install.packages("knitr")
   library(knitr)
@@ -79,7 +79,7 @@ file_name_noExt <- tools::file_path_sans_ext(file_name)
 filename <- paste(file_name_noExt,"_LEM.txt", sep="")
 ```
 
-# Lemmatisation
+## Lemmatisation
 
 ```{r}
 #on transforme le texte en une longue chaîne de caractères séparés par des espaces.
@@ -107,7 +107,7 @@ for(i in 2:length(x$token_id)){
 
 # 1. Vers l'analyse de sentiment
 
-## Téélcharger et charger le package syuzhet
+## Télécharger et charger le package _syuzhet_
 
 ```{r, warning=FALSE, results='hide'}
 if (!require("syuzhet")) install.packages("syuzhet")
