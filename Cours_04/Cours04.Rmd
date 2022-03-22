@@ -255,7 +255,7 @@ summary(text_to_analyse_bing_vector)
 
 ## La joie
 
-### Nous allons customier le dictionnaire
+### Nous allons customiser le dictionnaire
 
 Pour étudier la joie, nous sortons la colonne joie du lexique pour créer un petit sous-lexique
 
