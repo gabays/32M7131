@@ -262,7 +262,7 @@ Allons encore plus loin, et construisons une requête complexe…
 * Il est possible d'utiliser des propriétés de structures, c'est-à-dire d'utiliser les balises XML dans les requêtes:
 	* `<l> []* [frlemma="manger"] []* </l>`
 ---
-## Exercices
+## Exercices
 Cherchez:
 1. _monseigneur_ ou _monsieur_ (essayez d'autres termes équivalents)
 2. _dame_ ou _seigneur_ précédé d'un pronom possessif
