@@ -22,7 +22,7 @@ if(!require("knitr")){
 knitr::opts_chunk$set(echo = TRUE, fig.width=20)
 ```
 
-## Préparer la session de travail
+# 0. Préparer la session de travail
 
 ```{r}
 setwd("~/GitHub/UNIGE/32M7131/Cours_06")
@@ -43,7 +43,7 @@ if(!require("textreuse")){
 }
 ```
 
-# 1. Fonctionnement
+# 1. Principes de fonctionnement de `textReuse`
 
 ```{r}
 exemple <- "S'ils furent ma blessure, ils seront mon Achille, S'ils furent mon venin, le scorpion utile"
@@ -86,7 +86,7 @@ jaccard_dissimilarity(temoin_1, temoin_2)
 
 # 2. Préparation du texte
 
-## Udpipe
+## 2.1 Udpipe
 
 Il va falloire télécharger le package `UDpipe`. Pour le français du XVIIème s. nous conseillons `french-gsd`, même s'il est (très) loin d'être parfait.
 
@@ -95,7 +95,7 @@ if (!require("udpipe")) install.packages("udpipe")
 library(udpipe)
 ```
 
-## Préparation de la lemmatisation
+## 2.2 Préparation de la lemmatisation
 
 Nous allons lemamtiser le texte à l'aide dun modèle `UDPipe`. Il est en effet plus facile de travailler sur des lemmes pour diminuer la taille du lexique.
 
@@ -118,8 +118,12 @@ folder_name <-"corpus_1_reg_txt_clean/"
 Nous pouvons désormais charger le texte, et le modèle.
 
 ```{r}
+#Je charge le modèle
 udpipe_model_french <- udpipe_load_model(file = "tools/french-gsd-ud-2.4-190531.udpipe")
-text_to_lemmatise <- readLines(file_name)
+#Je charge le texte
+text_to_lemmatise <- readLines(file_name, encoding="UTF-8")
+#Je passe tout en bas de casse
+text_to_lemmatise <- tolower(text_to_lemmatise)
 #variable pour les sauvegardes
 #nom de fichier sans extension
 file_name_noExt <- tools::file_path_sans_ext(file_name)
@@ -127,7 +131,7 @@ file_name_noExt <- tools::file_path_sans_ext(file_name)
 filename <- paste(file_name_noExt,"_LEM.txt", sep="")
 ```
 
-## Lemmatisation
+## 2.3 Lemmatisation
 
 ```{r}
 #on transforme le texte en une longue chaîne de caractères séparés par des espaces.
@@ -151,14 +155,18 @@ Je lemmatise tout
 ```{r}
 #je donne le nom du dossier à traiter
 dir<-"corpus_1_reg_txt_clean"
+#Je prépare une ligne vide que je dois ajouter à la fin de chaque fichier (sinon textreuse plante)
+line = ""
 #je liste les fichiers à l'intérieur
 folder<-list.files(path=dir, full.names = TRUE)
 #ºe lance une boucle pour traiter les fichies les uns après les autres
 for (file in folder){
   #j'importe le doc
-  text_to_lemmatise <- readLines(file)
+  text_to_lemmatise <- readLines(file, encoding="UTF-8")
   #je le transforme en un seul vecteur
   text_to_lemmatise <- paste(text_to_lemmatise, collapse = " ")
+  #Je passe tout en bas de casse
+  text_to_lemmatise <- tolower(text_to_lemmatise)
   #je sauvegarde le nom du fichier sans l'extenstion
   file_name_noExt <- tools::file_path_sans_ext(file)
   #je rajoute `_LEM.txt` à la fin du fichier sans extension pour le différencier
@@ -177,6 +185,8 @@ for (file in folder){
     next
     cat(x$lemma[i], "", file = filename, append = T)
   }
+  #J'ajoute ma ligne vide en fin de texte
+  write(line, file = filename, append = TRUE, sep = "\n")
 }
 ```
 
@@ -192,24 +202,31 @@ dir.create("corpus_1_reg_txt_LEM")
 folder<-list.files(path=dir, pattern="*LEM.txt", full.names = TRUE)
 #je les déplace un à un dans le nouveau dossier
 for(file in folder){
-  file.move(file,"corpus_1_reg_txt_LEM")
+  file.move(file,"corpus_1_reg_txt_LEM", overwrite = TRUE)
 }
 ```
 
 # 3. Comparer les textes
 
-## Télécharger et charger le package textreuse
+Télécharger et charger le package textreuse
 
 ```{r, warning=FALSE, results='hide'}
 if (!require("textreuse")) install.packages("textreuse")
 library(textreuse)
 ```
 
-## Analyse simple
+## 3.1 Analyse simple
 
 ```{r}
 corpus = TextReuseCorpus(dir = "corpus_1_reg_txt_LEM/", tokenizer = tokenize_ngrams, n = 3)
 ```
+
+Je pourrais complexifier l'analyse en modifiant les paramètres de tokenisation:
+
+```{r}
+corpus_skip = TextReuseCorpus(dir = "corpus_1_reg_txt_LEM/", tokenizer = tokenize_skip_ngrams, n = 3, k = 1)
+```
+
 
 ```{r}
 corpus
@@ -268,9 +285,9 @@ alignement<- align_local(Statira, Andromaque)
 alignement
 ```
 
-## Approche Minhash
+## 3.2 Approche Minhash
 
-### Explications
+### 3.2.1 Explications
 
 On nomme fonction de hachage, de l'anglais _hash function_, une fonction particulière qui, à partir d'une donnée fournie en entrée, calcule une empreinte numérique servant à identifier rapidement la donnée initiale. (cf.[Wikipedia](https://fr.wikipedia.org/wiki/Fonction_de_hachage)). Pour faire simple et vite: on transforme le texte en une série de clefs numériques. On parle de _Locality sensitive hashing_ (cf. [Wikipedia](https://fr.wikipedia.org/wiki/Locality_sensitive_hashing)).
 
@@ -291,9 +308,9 @@ Je peux faire en sorte de transformer chacun de ces n-gram en hashes. L'intérê
 
 ```{r}
 #j'affiche le même résultat sous la forme de hashes
-hashes(exemple_tr)
+head (hashes(exemple_tr), 25)
 #Pour y voir plus clair, je peux afficher tout cela sous la forme d'un data frame
-merge(tokens(exemple_tr),hashes(exemple_tr))
+#merge(tokens(exemple_tr),hashes(exemple_tr))
 ```
 
 Je peux développer ce système, en utilisant des minhashes: je convertis une liste de tokens en un nombre _n_ (_infra_ 240) de tokens sélectionnés au hasard et transformés en hashes eux-mêmes.
@@ -323,7 +340,7 @@ lsh_threshold(h = 240, b = 120)
 lsh_threshold(h = 240, b = 240)
 ```
 
-## En pratique
+### 3.2.2 En pratique
 
 Je peux donc répéter l'opération à plus grande échelle
 
