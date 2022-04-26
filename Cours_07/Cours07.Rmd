@@ -45,26 +45,10 @@ if(!require("devtools")){
   install.packages("devtools")
   library(devtools)
 }
-if(!require("wordVectors")){
-  install.packages("wordVectors")
-  library(wordVectors)
-}
 if(!require("magrittr")){
   install.packages("magrittr")
   library(magrittr)
 }
-```
-
-On télécharge un corpus issu de Wikipedia
-
-```{r eval=F}
-library(text2vec)
-text8_file = "data/text8"
-if (!file.exists(text8_file)) {
-   download.file("http://mattmahoney.net/dc/text8.zip", "~/text8.zip")
-   unzip ("~/text8.zip", files = "text8", exdir = "~/")
- }
-wiki = readLines(text8_file, n = 1, warn = FALSE)
 ```
 
 # 1.Premiers pas
@@ -123,6 +107,13 @@ plot(eco,method="pca")
 ```
 
 # 2. Entraîner son propre modèle de langue avec GloVe
+
+Je charge le corpus:
+
+```{r eval=F}
+text8_file = "data/text8"
+wiki = readLines(text8_file, n = 1, warn = FALSE)
+```
 
 ## 2.1 Entraînement 
 
