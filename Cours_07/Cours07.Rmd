@@ -1,0 +1,250 @@
+---
+title: '7. Les modèles de langue et les champs lexicaux'
+author: "Simon Gabay"
+date: "15/03/2022"
+output:
+  html_document:
+    highlight: pygments
+    theme: united
+    toc: yes
+    toc_float:
+      toc_collapsed: yes
+  pdf_document:
+    toc: yes
+---
+
+
+Certains chercheurs mettent à disposition des modèles word2vec, GloVe, LSA qui peuvent être considérés comme des tables de correspondance entre des mots et un vecteur numérique dans un espace d'une certaine taille (en générale très inférieure à la taille du vocabulaire qui est, on le rappelle, grande). Cet espace est un espace "sémantique" en quelques sortes.  
+
+GloVe, Word2vec et LSA produisent tous les 3 des vectorisations du langage, _i.e._ des représentations dans un espace vectoriel réel de taille _N_ (choisie)
+
+- word2vec : s'appuie sur un simple perceptron multi-couches (réseau de neurone) à une couche cachée (de taille N) où la tâche est de prédire le mot en fonction du contexte ou réciproquement. La vectorisation en dimension N est fournie par l'ensemble des poids des neurones de la couche cachée.
+- GloVe (global vector) : s'appuie sur la factorisation de la matrice de co-occurrence des termes.
+- LSA : s'appuie sur la décomposition en valeurs singulières de la matrice termes-documents.
+
+Cette tâche d'apprentissage considérable est souvent faite sur de très gros corpus (comme Wikipédia par exemple), et leur réutilisation à d'autres fins s'appelle le transfer learning.
+
+# 0. Préparer la session de travail
+
+```{r}
+setwd("~/GitHub/UNIGE/32M7131/Cours_07")
+```
+
+Je charge la librairie `text2vec`
+
+```{r, message=FALSE}
+if(!require("text2vec")){
+  install.packages("text2vec")
+  library(text2vec)
+}
+if(!require("plotly")){
+  install.packages("plotly")
+  library(plotly)
+}
+if(!require("devtools")){
+  install.packages("devtools")
+  library(devtools)
+}
+if(!require("wordVectors")){
+  install.packages("wordVectors")
+  library(wordVectors)
+}
+if(!require("magrittr")){
+  install.packages("magrittr")
+  library(magrittr)
+}
+```
+
+On télécharge un corpus issu de Wikipedia
+
+```{r eval=F}
+library(text2vec)
+text8_file = "data/text8"
+if (!file.exists(text8_file)) {
+   download.file("http://mattmahoney.net/dc/text8.zip", "~/text8.zip")
+   unzip ("~/text8.zip", files = "text8", exdir = "~/")
+ }
+wiki = readLines(text8_file, n = 1, warn = FALSE)
+```
+
+# 1.Premiers pas
+
+## 1.1 Installation
+
+L'exemple ci-dessous s'appuie sur un package github non pré-compilé, il vous faudra donc installer RTools pour le faire fonctionner: le package n'est pas sur CRAN
+
+```{r, eval=F}
+devtools::install_github("bmschmidt/wordVectors")
+```
+
+On charge un modèle word2vec déjà entraîné:
+
+```{r, results='hide', message=FALSE, warning=FALSE, eval=F}
+model = read.vectors("data/frWac_non_lem_no_postag_no_phrase_200_cbow_cut100.bin")
+```
+
+## 1.2 Régularités linguistiques:
+
+Cherchons les mots les plus proches de _economie_, son "champ lexical" en quelque sorte:
+
+```{r, eval=F}
+model %>% closest_to("economie") # montre les mots les plus proche de economie dans cet espace
+```
+
+Il est possible de faire des opérations simple pour retrouver un terme précis. Par exemple:
+
+_vector("homme")−vector("il")+vector("elle")_
+
+Le terme attendu est donc _femme_:
+
+```{r, eval=F}
+model %>% closest_to(~ "homme" - "il" + "elle")
+```
+
+Reprenons la même opération avec:
+
+_vector("roi")−vector("il")+vector("elle")_
+
+Le terme attendu est donc _reine_:
+
+```{r, eval=F}
+model %>% closest_to(~ "roi" - "il" + "elle")
+```
+
+Il est possible de visualiser toute les mots gravitant autour d'un groupe:
+
+```{r, eval=F}
+#déterminons une série de mots simples dont nous vouslons retrouver les 50 mots les plus proches:
+terms = closest_to(model,model[[c("croissance","rÃ©cession","chomage","impot")]],50) 
+#average = FALSE, on prend la version numérique de chaque mot
+eco = model[[terms$word,average=F]] 
+#on dessine le graphique en deux dimensions:
+plot(eco,method="pca")
+```
+
+# 2. Entraîner son propre modèle de langue avec GloVe
+
+## 2.1 Entraînement 
+
+On fabrique un vocabulaire pour créer les vecteurs et une _term co-occurrence matrix_ (TCM)
+
+```{r eval=F}
+# tokenisation
+tokens = space_tokenizer(wiki)
+# creation d'un vocabulaire de 1-grammes
+it = itoken(tokens, progressbar = FALSE)
+vocab = create_vocabulary(it)
+# on supprime les n-grammes rares
+vocab = prune_vocabulary(vocab, term_count_min = 5L)
+vectorizer = vocab_vectorizer(vocab)
+# Term co-occurrence matrix (TCM) avec un contexte de taille 5
+tcm = create_tcm(it, vectorizer, skip_grams_window = 5L)
+```
+
+Passons à l'entraînement: la fonction de perte ( _loss function_ ) devrait diminuer jusqu'à ce stabiliser grâce à l' _early stopping_
+
+```{r, eval=F}
+glove = GlobalVectors$new(rank = 50, x_max = 10)
+wv_main = glove$fit_transform(tcm, n_iter = 50, convergence_tol = 0.01)
+#On sauvegarde le résultat
+save(wv_main,glove,file="GloVe.RData")
+```
+
+Observons les dimensions du modèle: 
+
+```{r eval=F}
+load("GloVe.RData")
+dim(wv_main)
+wv_context = glove$components
+dim(wv_context)
+word_vectors = wv_main + t(wv_context)
+```
+
+## 1.2 Régularités linguistiques 
+
+### 1.2.1 Utilisation: cas simple
+
+Dans cet espace numérique, il a été montré que deux mots proches (au sens d'une distance mathématique donc) avaient des sens proches. C'est un énorme gain par rapport à l'approche _bag of words_ où deux synonymes peuvent avoir une similarité apparente très faible du fait qu'ils sont rarement utilisés ensemble dans les mêmes documents (lorsque la similarité est calculée via les colonnes de la matrice documents termes typiquement).
+
+Tentons de trouver les mots  proches de `berlin` avec la méthode cosine
+
+```{r eval=F}
+#calcul de la distance cosinus
+cos_sim = sim2(x = word_vectors, y = word_vectors["berlin", , drop = FALSE], method = "cosine", norm = "l2")
+```
+
+Termes les plus proches:
+
+```{r eval=F}
+head(sort(cos_sim[,1], decreasing = TRUE), 10)
+```
+
+Termes diamétralement opposés:
+
+```{r eval=F}
+tail(sort(cos_sim[,1], decreasing = TRUE), 10)
+```
+
+Termes décorrélés:
+
+```{r eval=F}
+head(sort(abs(cos_sim[,1])), 10)
+```
+
+### 1.2.2 Utilisation: cas complexe
+
+Les propriétés mathématiques et sémantiques de ces modèles en ont fait leur renommée. Ici `Paris - France + Allemagne`:
+
+```{r eval=F}
+berlin = word_vectors["paris", , drop = FALSE] - 
+  word_vectors["france", , drop = FALSE] + 
+  word_vectors["germany", , drop = FALSE]
+cos_sim = sim2(x = word_vectors, y = berlin, method = "cosine", norm = "l2")
+```
+
+Termes les plus proches (synonymes):
+
+```{r eval=F}
+head(sort(cos_sim[,1], decreasing = TRUE), 10)
+```
+
+Termes diamétralement opposés (antonymes):
+
+```{r eval=F}
+tail(sort(cos_sim[,1], decreasing = TRUE), 10)
+```
+
+Termes décorrélés:
+
+```{r eval=F}
+head(sort(abs(cos_sim[,1])), 10)
+```
+
+### 1.2.3 Utilisation: représentation graphique:
+
+On peut représenter des mots graphiquement en identifiant le champ sémantique auxquels ils appartiennent:
+
+```{r, eval=F}
+words=c("money","finance","economy","cash","dollar","euro",
+        "data","mining","science","study","predictive","learning",
+        "country","city","town","house","place","home",
+        "english","french","language","german","travel","speak")
+topic=c(rep("économie",6),
+        rep("modélisation",6),
+        rep("lieu",6),
+        rep("langage",6))
+#on peut récupérer les mots les plus similaires à plusieurs références
+terms = word_vectors[words, , drop = FALSE] 
+terms_df=data.frame(predict(prcomp(terms,rank. = 2)))
+terms_df$word=words
+terms_df$topic=topic
+g <- ggplot(terms_df,aes(x=PC1,y=PC2,label=word,color=topic))+geom_text()
+g
+library(plotly)
+p <- ggplotly(g)
+p
+htmlwidgets::saveWidget(as_widget(p),"PC1_PC2_glove.html")
+htmltools::includeHTML("PC1_PC2_glove.html")
+```
+
+Source: https://gist.github.com/phileas-condemine/2db55ae38e78c61728716dc3a7b91979
