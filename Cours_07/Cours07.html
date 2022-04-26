@@ -1593,55 +1593,46 @@ div.tocify {
 <a class="sourceLine" id="cb2-10" title="10">  <span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</a>
 <a class="sourceLine" id="cb2-11" title="11">  <span class="kw">library</span>(devtools)</a>
 <a class="sourceLine" id="cb2-12" title="12">}</a>
-<a class="sourceLine" id="cb2-13" title="13"><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;wordVectors&quot;</span>)){</a>
-<a class="sourceLine" id="cb2-14" title="14">  <span class="kw">install.packages</span>(<span class="st">&quot;wordVectors&quot;</span>)</a>
-<a class="sourceLine" id="cb2-15" title="15">  <span class="kw">library</span>(wordVectors)</a>
-<a class="sourceLine" id="cb2-16" title="16">}</a>
-<a class="sourceLine" id="cb2-17" title="17"><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;magrittr&quot;</span>)){</a>
-<a class="sourceLine" id="cb2-18" title="18">  <span class="kw">install.packages</span>(<span class="st">&quot;magrittr&quot;</span>)</a>
-<a class="sourceLine" id="cb2-19" title="19">  <span class="kw">library</span>(magrittr)</a>
-<a class="sourceLine" id="cb2-20" title="20">}</a></code></pre></div>
-<p>On télécharge un corpus issu de Wikipedia</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">library</span>(text2vec)</a>
-<a class="sourceLine" id="cb3-2" title="2">text8_file =<span class="st"> &quot;data/text8&quot;</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(text8_file)) {</a>
-<a class="sourceLine" id="cb3-4" title="4">   <span class="kw">download.file</span>(<span class="st">&quot;http://mattmahoney.net/dc/text8.zip&quot;</span>, <span class="st">&quot;~/text8.zip&quot;</span>)</a>
-<a class="sourceLine" id="cb3-5" title="5">   <span class="kw">unzip</span> (<span class="st">&quot;~/text8.zip&quot;</span>, <span class="dt">files =</span> <span class="st">&quot;text8&quot;</span>, <span class="dt">exdir =</span> <span class="st">&quot;~/&quot;</span>)</a>
-<a class="sourceLine" id="cb3-6" title="6"> }</a>
-<a class="sourceLine" id="cb3-7" title="7">wiki =<span class="st"> </span><span class="kw">readLines</span>(text8_file, <span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">warn =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb2-13" title="13"><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;magrittr&quot;</span>)){</a>
+<a class="sourceLine" id="cb2-14" title="14">  <span class="kw">install.packages</span>(<span class="st">&quot;magrittr&quot;</span>)</a>
+<a class="sourceLine" id="cb2-15" title="15">  <span class="kw">library</span>(magrittr)</a>
+<a class="sourceLine" id="cb2-16" title="16">}</a></code></pre></div>
 </div>
 <div id="premiers-pas" class="section level1">
 <h1>1.Premiers pas</h1>
 <div id="installation" class="section level2">
 <h2>1.1 Installation</h2>
 <p>L’exemple ci-dessous s’appuie sur un package github non pré-compilé, il vous faudra donc installer RTools pour le faire fonctionner: le package n’est pas sur CRAN</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;bmschmidt/wordVectors&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;bmschmidt/wordVectors&quot;</span>)</a></code></pre></div>
 <p>On charge un modèle word2vec déjà entraîné:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">model =<span class="st"> </span><span class="kw">read.vectors</span>(<span class="st">&quot;data/frWac_non_lem_no_postag_no_phrase_200_cbow_cut100.bin&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">model =<span class="st"> </span><span class="kw">read.vectors</span>(<span class="st">&quot;data/frWac_non_lem_no_postag_no_phrase_200_cbow_cut100.bin&quot;</span>)</a></code></pre></div>
 </div>
 <div id="régularités-linguistiques" class="section level2">
 <h2>1.2 Régularités linguistiques:</h2>
 <p>Cherchons les mots les plus proches de <em>economie</em>, son “champ lexical” en quelque sorte:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">closest_to</span>(<span class="st">&quot;economie&quot;</span>) <span class="co"># montre les mots les plus proche de economie dans cet espace</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">closest_to</span>(<span class="st">&quot;economie&quot;</span>) <span class="co"># montre les mots les plus proche de economie dans cet espace</span></a></code></pre></div>
 <p>Il est possible de faire des opérations simple pour retrouver un terme précis. Par exemple:</p>
 <p><em>vector(“homme”)−vector(“il”)+vector(“elle”)</em></p>
 <p>Le terme attendu est donc <em>femme</em>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">closest_to</span>(<span class="op">~</span><span class="st"> &quot;homme&quot;</span> <span class="op">-</span><span class="st"> &quot;il&quot;</span> <span class="op">+</span><span class="st"> &quot;elle&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">closest_to</span>(<span class="op">~</span><span class="st"> &quot;homme&quot;</span> <span class="op">-</span><span class="st"> &quot;il&quot;</span> <span class="op">+</span><span class="st"> &quot;elle&quot;</span>)</a></code></pre></div>
 <p>Reprenons la même opération avec:</p>
 <p><em>vector(“roi”)−vector(“il”)+vector(“elle”)</em></p>
 <p>Le terme attendu est donc <em>reine</em>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">closest_to</span>(<span class="op">~</span><span class="st"> &quot;roi&quot;</span> <span class="op">-</span><span class="st"> &quot;il&quot;</span> <span class="op">+</span><span class="st"> &quot;elle&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">closest_to</span>(<span class="op">~</span><span class="st"> &quot;roi&quot;</span> <span class="op">-</span><span class="st"> &quot;il&quot;</span> <span class="op">+</span><span class="st"> &quot;elle&quot;</span>)</a></code></pre></div>
 <p>Il est possible de visualiser toute les mots gravitant autour d’un groupe:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">#déterminons une série de mots simples dont nous vouslons retrouver les 50 mots les plus proches:</span></a>
-<a class="sourceLine" id="cb9-2" title="2">terms =<span class="st"> </span><span class="kw">closest_to</span>(model,model[[<span class="kw">c</span>(<span class="st">&quot;croissance&quot;</span>,<span class="st">&quot;rÃ©cession&quot;</span>,<span class="st">&quot;chomage&quot;</span>,<span class="st">&quot;impot&quot;</span>)]],<span class="dv">50</span>) </a>
-<a class="sourceLine" id="cb9-3" title="3"><span class="co">#average = FALSE, on prend la version numérique de chaque mot</span></a>
-<a class="sourceLine" id="cb9-4" title="4">eco =<span class="st"> </span>model[[terms<span class="op">$</span>word,average=F]] </a>
-<a class="sourceLine" id="cb9-5" title="5"><span class="co">#on dessine le graphique en deux dimensions:</span></a>
-<a class="sourceLine" id="cb9-6" title="6"><span class="kw">plot</span>(eco,<span class="dt">method=</span><span class="st">&quot;pca&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">#déterminons une série de mots simples dont nous vouslons retrouver les 50 mots les plus proches:</span></a>
+<a class="sourceLine" id="cb8-2" title="2">terms =<span class="st"> </span><span class="kw">closest_to</span>(model,model[[<span class="kw">c</span>(<span class="st">&quot;croissance&quot;</span>,<span class="st">&quot;rÃ©cession&quot;</span>,<span class="st">&quot;chomage&quot;</span>,<span class="st">&quot;impot&quot;</span>)]],<span class="dv">50</span>) </a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">#average = FALSE, on prend la version numérique de chaque mot</span></a>
+<a class="sourceLine" id="cb8-4" title="4">eco =<span class="st"> </span>model[[terms<span class="op">$</span>word,average=F]] </a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co">#on dessine le graphique en deux dimensions:</span></a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="kw">plot</span>(eco,<span class="dt">method=</span><span class="st">&quot;pca&quot;</span>)</a></code></pre></div>
 </div>
 </div>
 <div id="entraîner-son-propre-modèle-de-langue-avec-glove" class="section level1">
 <h1>2. Entraîner son propre modèle de langue avec GloVe</h1>
+<p>Je charge le corpus:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">text8_file =<span class="st"> &quot;data/text8&quot;</span></a>
+<a class="sourceLine" id="cb9-2" title="2">wiki =<span class="st"> </span><span class="kw">readLines</span>(text8_file, <span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">warn =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <div id="entraînement" class="section level2">
 <h2>2.1 Entraînement</h2>
 <p>On fabrique un vocabulaire pour créer les vecteurs et une <em>term co-occurrence matrix</em> (TCM)</p>
