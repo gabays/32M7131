@@ -22,7 +22,6 @@ Simon Gabay
 ---
 ## Paramètres
 
-
 Effectuer les trois étapes:
 1. Sélectionner le dossier `CORPUS1`
 2. Paramétrer l'import (pour l'instant nous ne faisons rien)
@@ -55,16 +54,16 @@ Observez (clic droit sur le nom du corpus dans la colonne de gauche)
 ---
 ## Un mot
 
-* Dans l'index, cherchez _seigneur_
-* Affichez la concordance (clic droit)
-* Affichez l'occurrence dans l'édition (clic droit sur l'occurence)
+* Dans l'index, cherchez _Seigneur_ (avec majuscule!)
+* Affichez la concordance (clic droit, `Send to concordance`)
+* Affichez l'occurrence dans l'édition (clic droit sur l'occurence, `Send to concordance `Display in full text`)
 
 Revenez à l'index
-* Affichez la cooccurrence (clic droit)
+* Affichez la cooccurrence  (clic droit, `Send to cooccurrence`)
 
 Revenez à l'index
 
-* Affichez la progression (clic droit)
+* Affichez la progression (clic droit, `Send to progression`)
 
 ---
 ## Vers la concordance
@@ -111,13 +110,21 @@ Rappelons que notre fichier original est en XML-TEI, soit un langage (XML) et un
 
 * Créer une table lexicale
 * Explorer la partition
-* Supprimer la ponctuation
+* Supprimer les données inutiles, comme la ponctuation (qui est ici le fait de l'éditeur)
 * Calculer les spécificités d'Oreste et de Pylade
+* Générer un histogramme (tokens suggérés: _mon_, _me_, _Vous_, _vous_, _Seigneur_).
 
 ---
 ## Créer une table
 
 ![100% center](images/Corpus1_table.png)
+
+---
+## Créer une table
+
+La table lexicale permet notamment de supprimer des tokens. En fonction de ce que nous allons supprimer, nous allons créer une table plus ou moins grande:
+* Si nous nous apprêtons à faire une analyse de type stylométrique, et donc à ne conserver que les mots vides, il est inutile (la plupart du temps) de faire une table contenant plus de 200 mots
+* Si nous nous apprêtons à faire une analyse de type textométrique, et donc à ne conserver que les mots thématiques , il va falloir faire une table un peu plus grande, probablement d'environ 500 mots.
 
 ---
 ## Supprimer des rangs
@@ -127,7 +134,7 @@ Rappelons que notre fichier original est en XML-TEI, soit un langage (XML) et un
 ---
 ## Supprimer des rangs
 
-![100% center](images/Corpus1_table.png)
+C'est l'occasion de retirer des mots inutiles, ou qui pourrait créer du bruit. C'est le cas des signes de ponctuation, qui pour les documents anciens, sont souvent ajoutés par l'éditeur et ne sont donc pas de l'auteur.
 
 ---
 ## Calculer les spécificités
@@ -138,6 +145,11 @@ Rappelons que notre fichier original est en XML-TEI, soit un langage (XML) et un
 ## Générer un histogramme
 
 ![100% center](images/Corpus1_histogramme.png)
+
+---
+## Générer un histogramme
+
+![100% center](images/Corpus1_histogramme2.png)
 
 ---
 # Second corpus
@@ -174,6 +186,15 @@ Les informations sur les textes, les _métadonnées_, sont importantes: il convi
 ![100% center](images/Corpus2_Metadata.png)
 
 ---
+## Installer TreeTagger
+
+Pour pouvoir lemmatiser un document, il faut:
+- installer TreeTagger
+- ajouter les modèles des langues que vous allez utiliser
+
+Pour plus d'information, suivre ce lien: http://txm.sourceforge.net/doc/treetagger/fr/install.html
+
+---
 ## Import XML
 
 Recommençons l'import XML
@@ -197,13 +218,12 @@ Pour utiliser CQP, il faut un langage: CQL (_Corpus Query Language_)
 
 Manuel de TXM [en ligne](http://textometrie.ens-lyon.fr/html/doc/manual/0.7.9/fr/manual60.xhtml)
 
-On avait déjà fait une première requête dans l'Index (_Seigneur_): allons plus loin, et cherchez le lemme _Seigneur_ (indice: suivez la baguette magique).
+On avait déjà fait une première requête dans l'Index (_Seigneur_): allons plus loin, et cherchez le lemme _seigneur_ (indice: suivez la baguette magique). Essayez avec d'autres mots (par ex. _je_)
 
 ---
 ## Requête (lemme)
 
 ![100% center](images/Corpus2_Requete.png)
-
 
 ---
 ## Exploration 2
@@ -259,9 +279,11 @@ Allons encore plus loin, et construisons une requête complexe…
 	* `\s` un caractère d’espacement
 	* `\w` un caractère de mot
 	* Et beaucoup d'autres…
+
 ---
 * Il est possible d'utiliser des propriétés de structures, c'est-à-dire d'utiliser les balises XML dans les requêtes:
 	* `<l> []* [frlemma="manger"] []* </l>`
+
 ---
 ## Exercices
 Cherchez:
@@ -300,24 +322,45 @@ Vous savez désormais faire des partitions. À l'aide des métadonnées, vous po
 ![100% center](images/Corpus2_Metadata_partitions.png)
 
 ---
+## Créer une Classification
 
-Pour chaque partition, partez à la découverte. Un processus d'exploration simple est:
-1. création d'une table lexicale
-2. Nettoyage de ladite table
-3. Calculer les spécificités
-4. Calculer la classification
-5. Calculer l'AFC
+Genre:
+
+1. Créer une partition (valeurs: _structure_: `text`, _property_: `genre`)
+2. Créer une table lexicale (prenez 500 mots)
+3. Nettoyer les données (retirer la ponctuation par exemple)
+4. Calculer les spécificités
+5. Sélectionner les articles _vous_, _ses_, _sa_, _nous_
+6. Calculer l'histogramme
+
+Observer les résultats
 
 ---
-## Gestion de la table lexicale
+## Partitionner avec les métadonnées
 
-La table lexicale permet notamment de supprimer des tokens. En fonction de ce que nous allons supprimer, nous allons créer une table plus ou moins grande:
-* Si nous nous apprêtons à faire une analyse de type stylométrique, et donc à ne conserver que les mots vides, il est inutile (la plupart du temps) de faire une table contenant plus de 200 mots
-* Si nous nous apprêtons à faire une analyse de type textométrique, et donc à ne conserver que les mots thématiques , il va falloir faire une table un peu plus grande, probablement d'environ 500 mots.
+![100% center](images/Corpus2_partition.png)
 
 ---
 
 ![100% center](images/Corpus2_histogramme.png)
+
+---
+## Créer une Classification 2
+
+Particularités d'auteur
+
+1. Créer une partition (valeurs: _structure_: `text`, _property_: `genre`)
+2. Créer une table lexicale (prenez 500 mots)
+3. Nettoyer les données (retirer la ponctuation par exemple)
+4. Calculer les spécificités
+5. Sélectionner les articles _ah_, _dans_, _il_
+6. Calculer l'histogramme
+
+Observer les résultats
+
+---
+
+![100% center](images/Corpus2_histogramme2.png)
 
 ---
 ### Sources

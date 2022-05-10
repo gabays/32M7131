@@ -32,6 +32,8 @@ Il faut ensuite télécharger _RStudio_: https://rstudio.com/products/rstudio/do
 
 Vous avez besoin de télécharger TXM : https://txm.gitpages.huma-num.fr/textometrie/
 
+Pensez à installer TreeTagger: https://txm.gitpages.huma-num.fr/textometrie/InstallTreeTagger
+
 ### Google colab
 
 Vous avez besoin d'un compte google pour utiliser colab (https://colab.research.google.com/).

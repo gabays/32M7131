@@ -1,6 +1,6 @@
 Cours Stylistique numérique
 
-# Introduction à la stylistique
+# Une étape clef: lemmatiser
 
 Simon Gabay
 
