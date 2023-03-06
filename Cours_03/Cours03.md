@@ -21,7 +21,7 @@ h2 {
 
 Distant Reading 2: linguistique computationnelle
 
-# Une étape clef: préparation des données et entraînement 
+# Entraîner un modèle (de lemmatisation)
 
 Simon Gabay
 
@@ -29,257 +29,205 @@ Simon Gabay
 
 
 ---
-
-# Lemmatiser
-
----
-## Définition
-
-> La lemmatisation désigne un **traitement lexical** apporté à un texte en vue de son analyse. Ce traitement consiste à appliquer aux **occurrences des lexèmes** sujets à flexion (en français, verbes, substantifs, adjectifs) **un codage** renvoyant à leur entrée lexicale commune (« **forme canonique** » enregistrée dans les dictionnaires de la langue, le plus couramment), que l'on désigne sous le terme de lemme.
-
-Un exemple:
-
-| Texte | Les | étoiles | luisent | dans | la | nuit | noire | . |
-| ------|-----|---------|---------|------|----|------|-------|---|
-| Lemme | Le  | étoile  | luire   | dans | le | nuit | noir  | . |
+# Logique d'entraînement
 
 ---
-## Service en ligne
+## L'apprentissage automatique
 
-Il existe des services en ligne: https://dh.chartes.psl.eu/deucalion/freem
+L'apprentissage machine (ou automatique) se fonde sur des approches mathématiques et statistiques pour donner aux ordinateurs la capacité d'« apprendre » à partir de données, c'est-à-dire d'améliorer leur performance à résoudre des tâches sans être explicitement programmés pour chacune.
 
-Vous pouvez faire un essai avec le texte suivant:
-
-```
-LA Cigale ayant chanté
-Tout l’Eſté,
-Se trouva fort dépourvuë
-Quand la biſe fut venuë.
-```
-
-Evidemment le résultat n'est pas magique. Il faut d'abord entraîner un modèle.
+Il existe plusieurs méthodes:
+* Machines à vecteurs de support
+* Méthodes statistiques
+* Les réseaux de neurones
+* …
 
 ---
-## Cycle de travail
+## Vers l'apprentissage profond
 
-![w:900 center](images/infra-cycle.png)
-
-Thibault Clérice, Vincent Jolivet, Julien Pilla. "Building infrastructure for annotating medieval, classical and pre-orthographic languages: the Pyrrha ecosystem." _Digital Humanities 2022 (DH2022)_, Jul 2022, Tokyo, Japan. [⟨hal-03606756⟩](https://shs.hal.science/hal-03606756v1).
-
+![w:1000 center](images/deep.png)
 
 ---
-## Lemmatiser: le (pré-)problème de la tokénisation
+## Apprendre pour une machine
 
-* _pomme_
-* _pomme de terre_
-* _aujourd'hui_
-* _c'est_
-* _tire-bouchon_
-* _veux-tu_
-* _Celui-ci_
-* _treshumble_ (XVIIe s.)
-* _C'est M. Dupont._
-* _bien que_
-* _parce que_
-* _ce pendant_ (XVIe s.)
+Pour apprendre à une machine à faire quelque chose, on a deux possibilités:
+1. Donner des règles à la machine: _suivons_ a pour lemme _suivre_. Le problème c'est qu'il existe des cas ambigus: _suis_? Il faut alors rajouter des règles toujours complexes
+2. Donner des exemples à la machine, qui va déduire des règles à partir des exemples: _je suis un homme_ -> _être_ vs _je suis le cours_ -> _suivre_. Le problème c'est qu'il faut beaucoup d'exemple
+
+Nous allons ici suivre la seconde méthode, qui est plus efficace. Il va donc nous falloir des exemples
 
 ---
+## Entraînement d'un modèle
 
-## Lemmatiser: cas limites
-
-Il y a un problème avec les homographes (impossibles à traiter avec une approche par lexique):
-
-> _Il **est** à l'**est** de la ville._
-
-> _Je **suis** légaliste: je **suis** la loi._
-
-L'homographie peut être accidentelle (OCR, anciens états de langue):
-
-> _Il va **a** Paris._
-
-Il peut aussi y avoir un problème avec le polymorphisme:
-
->_Il y a **besoing** et **besoin**._
-
----
-## Lemmatiser: cas problématiques
-
-* _comtesse_
-* _va-t-il_
-* _Jehan_
-* _Jeanne_
-* _Vespasianus_ 
-* _François de La Rochefoucauld_
-* _Oeuf_
-* _Égypte_
-* _aux_
-* _dudit_
-
----
-## Lemmatiser: cas problématiques
-
-* _comtesse_ -> Féminin? ou masculin?
-* _va-t-il_ -> Que faire du _-t-_ euphonique?
-* _Jehan_ -> normaliser les noms?
-* _Jeanne_ -> Féminiser les noms propres?
-* _Vespasianus_ -> Moderniser les noms?
-* _François de La Rochefoucauld_ -> _le_ ou _La_?
-* _Oeuf_ -> comment traiter les ligatures?
-* _Égypte_ -> garder les accents sur les majuscules?
-* _aux_ -> lemme composé _à_le_? _à+le_?
-* _dudit_ -> lemme composé "triple" _de_le_dit_?
-
----
-## Lemmatiser: quelques cas
-
-* _Il me demande à moi_
-* _Un retour éclatant_
-* _Une âme affligée_
-* _Les .X. comandemenz_ (XVe s.)
-* _le pater noster_
-* _s'enfuir_
-* _Le Père R._
-*  _il ne leur manquera rien_ vs _leur vif éclat_
-* _qui n'en veut?_ (corpus oral)
-* _Y z'y vont_
----
-## Lemmatiser: quelques cas
-
-* _Il me demande à moi_ -> moi=_je_ ou _moi_?
-* _Un retour éclatant_ -> adj ou participe présent?
-* _Une âme affligée_ -> adj ou participe passé?
-* _Les .X. commandements_ -> que faire des chiffres?
-* _le pater noster_ -> comment lemmatiser les emprunts?
-* _s'enfuir_ -> que faire des pronominaux (_abaisser_ vs _s'abaisser_?)
-* _Le Père R._ -> Que faire des noms abrégés?
-*  _il ne leur manquera rien_ -> pronom _il_ vs déterminant possessif _leur_
-* _qui n'en veut?_ -> particule clitique de fausse liaison
-* _Y z'y vont_ -> transformation euphonique _ils_>_y_ sur le modèle de la liaison+ particule enclitique formant un pronom(?)
-
----
-
-# Entraîner un modèle
-
----
-## Annoter
-
-Il va d'abord falloir préparer des données pour entraîner un modèle.
-
-Il existe une interface pour accélérer la transcription (contrôle qualité, corrections en lot…): https://dh.chartes.psl.eu/pyrrha/
+![w:800 center](images/split.png)
 
 ---
 ## Faire le _split_
 
-![w:900 center](images/lemma-dataset.png)
+La répartition des données dans les trois jeux dépend de la quantité de données à disposition
 
-
----
-## Faire le _split_: Protogénie
+![w:600 center](images/lemma-dataset.png)
 
 Il existe un outil pour faire ce split de manière propre: https://github.com/hipster-philology/protogenie
 
 ---
-## Cycle d'entraînement
+## Tests
+Le score du test n'a pas de valeur en soi, il dépend:
+* Des données d'entraînement
+* Des données dans le jeu de test
+
+99% sur un texte ne vaut pas (forcément) 99% sur un autre texte.
+
+Pour le test, on peut utiliser des données:
+* _In domain_: elles sont proches du jeu d'entraînement (tirées du même livre par exemple)
+* _Out of domain_: elles sont différentes du jeu d'entraînement -- la question étant de savoir jusqu'à quel point différentes
+
+---
+## Evaluer le résultat
+* La précision (_precision_) est le ratio du nombre de vrais positifs par rapport au nombre total de prédictions positives. Le nombre de fois où il a bien reconnu _être_ par rapport au nombre de fois où il a cru le reconnaître.
+* Le rappel (_recall_) est le ratio du nombre de vrais positifs par rapport au nombre total d’objets réels (pertinents). Le nombre de fois où il aurait dû reconnaitre _être_ par rapport au nombre de fois qu'il l'a reconnu.
+* l'exactitude (_accuracy_) est le nombre de prédictions correctes (vrais positifs+vrais négatifs) par rapport au nombre total de prédictions. Le nombre de fois où il ne s'est pas trompé en reconnaissant, ou en ne reconnaissant pas être.
+
+---
+
+![w:900 center](images/accuracy.ppm)
+
+---
+## Cycle d'amélioration d'un modèle
 
 ![w:900 center](images/model.png)
 
 ---
-## Fonctionnement du lemmatiseur (génération de séquence)
+# Déroulé de l'entraînement
+
+---
+## Un peu de vocabulaire
+* Une époque (_epoch_) correspond au passage de l'entièreté du jeu de _train_ à travers le réseau de neurones
+* La taille de lot (_batch size_) est le nombre d'exemples du jeu de _train_ montré à la machine avant la mise à jour du modèle.
+* L'itération (_iteration_) correspond au nombre de _batches_ pour compléter une époque.
+
+Si j'ai 1000 exemples, en faisant des lots de 250 il me faudra 4 itérations avant de compléter 1 époque.
+
+La taille de _batch_ a un impact direct sur les performances du modèles.
+
+---
+## Elle descend de la montagne à cheval
+
+Le processus d'apprentissage correspond à la descente d'un marcheur vers le point le plus bas de la vallée:
+1. Je le localise le point le plus bas
+2. J'avance un bout de chemin
+3. Je m'arrête pour réajuster mon chemin
+4. Et ainsi de suite jusqu'à ce que j'arrive en bas
+
+![w:500 center](images/montagne.png)
+
+---
+## Fonction de coût
+
+En montagne: notre objectif est d'arrivée à distance de zéro entre l'endroit où je me trouve et l'endroit oùe je veux aller.
+
+En ML: la fonction de perte (ou de coût, _loss function_) est la quantification de l’écart entre les prédictions du modèle et les observations annotées. L'objectif est d'atteindre zéro.
+
+![w:700 center](images/loss.png)
+
+
+---
+## Descente de gradient
+
+En montagne: on est perdu et on mesure la valeur de la pente pour redescendre pour atteindre le point le plus bas de la vallée.
+
+En ML: la descente de Gradient (_gradient descent_) est un algorithme qui permet de trouver le minimum de n’importe quelle fonction convexe (comme celle de coût) en convergeant progressivement vers celui-ci.
+
+![w:600 center](images/descent.png)
+
+---
+## Taux d'apprentissage
+
+En montagne: on doit descendre progressivement vers le bas de la vallée. Quelle est la distance à parcourir à chaque étape pour ne pas dépasser le point le plus bas de la vallée, mais y aller le plus vite possible?
+
+En ML: le taux d'apprentissage (_learning rate_) est un hyperparamètre qui joue sur la rapidité de la descente de gradient, soit la rapiditié/amplitude avec laquelle la valeur des paramètres de notre modèle est ajustée.
+
+![w:900 center](images/lr.png)
+
+---
+## Rétropropagation
+
+En montagne: je me suis trompé de chemin, je corrige ma trajectoire.
+
+En ML: la rétropropagation (_backpropagation_) du gradient consiste à mettre à jour les poids de chaque neurone de la dernière couche vers la première, afin de corriger les erreurs de prédiction.
+
+![w:600 center](images/backpropagation.png)
+
+---
+## Optimiseur
+
+En montagne: plutôt que de parcourir la même distance à chaque étape de ma descente, je vais ajuster la distance à chaque étape en fonction de ma situation.
+
+En ML: on n'utilise plus des taux d'apprentissage fixe, mais adaptif pour la descente stochastique de gradient.
+* La descente est dite "stochastique", car elle calcule le gradient en fonction d'un échantillon et non de la totalité des données. 
+* L'optimiseur est dit "adaptatif" car il est recalculé en tenant compte, par exemple, des précédents changements.
+
+Le plus utilisé des optimiseurs est "Adam" ([Kingma 2014](https://arxiv.org/abs/1412.6980)).
+
+---
+## La patience
+
+En montagne: cela fait plusieurs étapes que je n'arrive pas à descendre significativement, je vais donc diminuer la longueur de mes étapes pour arriver à trouver le bon chemin. Je tâtonne.
+
+En ML: après un nombre _n_ d'époques sans amélioration, je diminue le taux d'apprentissage.
+
+---
+## Sur- et sous-apprentissage
+
+![w:700 center](images/overfitting.png)
+
+* La généralisation désigne la capacité d'un modèle à effectuer de bonnes prédictions sur des données qu'il n'a pas vu pendant la procédure d'entraînement.
+* Le surapprentissage apparaît quand le résultat correspond trop préciséement à un ensemble de données et n'est pas généralisable à des observations supplémentaires et/ou futures.
+* Le sous-apprentissage est le phénomène inverse: le modèle n'arrive même pas à produire de bonnes prédictions avec les données d'entraînement
+
+---
+# Approche par séquence
+
+---
+## Génération de séquence
 
 ![w:900 center](images/lemma-seq.png)
 
 ---
-## Tester
+## Architecture encodeur-décodeur
 
-Il faut impérativement tester le résultat. Pour cela on utilise des données 
+Un Encodeur-Décodeur est un modèle de _deep Learning_ composé de deux réseaux de neurones, qui fonctionne de manière inversée:
+* Le premier réseau (encodeur) prend en entrée du texte (caractère, mot…) et produit une séquence de chiffres
+* Le second réseau (décodeur) reprend cette séquence chiffrée et la transforme en texte.
 
-* _In-domain_, qui proviennent du même jeu de données que l'entraînement
-* _Out-of-domain_, qui proviennent de données (plus ou moins) différentes de celles du jeu d'entraînement.
+L'intérêt de cette architecture est que la taille de l'entrée n'est pas nécessairement la même que pour la sortie (_est_->_être_ / _je suis étudiant_->_I am a student_)
 
----
-# Parties du discours
+![w:1000 center](images/encoder.png)
 
----
-## Parties du discours: quelques cas
-
-* _la Fortune_
-* _un retour éclatant_
-* _mon Dieu_ vs _le dieu Jupiter_
-* _parce que_
-* _vive les vacances_
-* _voici_
-* _18 ans_ vs _ses 18 ans_
-* _le pater noster_
-* _le Père R._
 
 ---
-## Parties du discours: quelques cas
+## Modèle séquence à séquence (dit _seq2seq_)
 
-* _la Fortune_ -> `NOMpro` ou `NOMcom`
-* _un retour éclatant_ -> `VERppa`
-* _mon Dieu_ (détermination non pertinente -> `NOMpro`) vs _le dieu Jupiter_ (`NOMcom`)
-* _parce que_ -> `ADVgen` par analogie (_bien que_)
-* _vive les vacances_ -> `VERcjg`
-* _voici_ -> `VERcjg`
-* _18 ans_ `DETcar NOMcom` vs _ses 18 ans_ `DETpos ADJcar NOMcom`
-* _le pater noster_ -> `ETR`
-* _le Père R._ -> `ABR`
+Le cœur de l'architeture _seq2seq_ ([Sutskever 2014](https://dl.acm.org/doi/10.5555/2969033.2969173)) est "l'état caché" (_hidden state_).
+* L’encodeur traite chaque élément de la séquence d’entrée, compile les informations qu’il capture dans un vecteur (appelé le vecteur de contexte ou d’état caché) qui contient toutes les informations décrivant la séquence.
+* L'encodeur envoie ensuite le vecteur de contexte au décodeur, qui commence à produire la séquence de sortie élément par élément.
+
+![w:900 center](images/seq2seq.png)
 
 ---
-## Parties du discours: quelques cas
+## Attention
 
-* _aux_
-* _duquel_
-* _Monsieur de La Rochefoucauld_
-* _Mesnil montant_ (Ménilmontant)
-* _là-dessus_
-* _premier_
-* _dernier_
+Si la séquence d'entrée est trop longue, le vecteur se met à contenir trop d'information dont il ne sait que faire. [Bahdanau 2014](https://arxiv.org/abs/1409.0473) propose la méthode suivante:
+* Ce n'est plus le dernier état caché qui est transmis au décodeur, mais tous les états cachés (il y a beaucoup plus d'information)
+* On attribue un _scoring_ à chaque état caché pour produire un vecteur de contexte, qui met en valeur les éléments les plus importants
+
+![w:800 center](images/attention.png)
 
 ---
-## Parties du discours: quelques cas
+## Le vecteur de contexte
 
-* _aux_ -> `PRE.DETdef`
-* _duquel_ -> `PRE.DETrel` ou `PRE.PROrel` ou `PRE.PROint` en fonction du contexte
-* _Monsieur de La Rochefoucauld_ -> `NOMcom PRE NOMpro NOMpro`
-* _Mesnil montant_ (Ménilmontant) `NOMpro VERppa`
-* _là-dessus_ -> `ADVgen PONfbl ADVgen`
-* _premier_ -> `ADJord`
-* _dernier_ -> `ADJqua`
+Dans le cas de la traduction automatique, le modèle est capable de réaligner les deux séquences, mais aussi de rapprocher _la_ de _area_ (utile pour choisir le genre vers le français).
 
----
+![w:530 center](images/bahdenau.png)
 
-# Morphologie
-
----
-## Morphologie: quelques cas
-
-* _je_
-* _me_
-* _moi_
-* _mes_
-* _vous êtes odieux_
-* _il est clair_
-* _J’ai mangé_
-* _rien_
-* _Julien Sorel_
-
----
-## Morphologie: quelques cas
-
-* _je_ -> `CAS=n` nominatif
-* _me_ -> `CAS=r` régime direct
-* _moi_-> `CAS=i` régime indirect
-* _mes_ -> `PERS.=1|NOMB.=s` ou `PERS.=1|NOMB.=p`
-* _vous êtes odieux_ -> Féminin ou masculin? _vous_ `GENRE=x`
-* _il est clair_ -> Masculin ou neutre? `NOMB.=s|GENRE=n` ou `NOMB.=s|GENRE=m`?
-* _J’ai mangé_ -> `VERcjg MODE=ind|TEMPS=pst` + `VERppe`
-* _rien_ -> `MORPH=empty`
-* _Julien Sorel_
-
----
-## Sources
-
-* Thibault Clérice, Matthias Gille Levenson, Lucence Ing, Ariane Pinche, Simon Gabay, Jean-Baptiste Camps, «Lemmatiser des textes et corriger l'annotation grâce à l'apprentissage profond avec Pyrrha », _Humanistica 2021_, Mai 2021, Rennes, France. [⟨hal-03224112⟩](https://hal.archives-ouvertes.fr/hal-03224112).
-
-* Simon Gabay, Jean-Baptiste Camps, Thibault Clérice. "Manuel d'annotation linguistique pour le français moderne (XVIe -XVIIIe siècles) : Version B." 2022. [⟨hal-02571190v2⟩](https://hal.science/hal-02571190).
+[comment]: <> (https://lbourdois.github.io/blog/nlp/Seq2seq-et-attention/)
