@@ -15,8 +15,8 @@
 
 * [`Cours_01`](https://github.com/gabays/32M7131/tree/Norm/Cours_01): Vers le quantitatif
 * [`Cours_02`](https://github.com/gabays/32M7131/tree/Norm/Cours_02): L'annotation linguistique
-* [`Cours_03`](https://github.com/gabays/32M7131/tree/Norm/Cours_03): Entraîner un lemmatiseur avec _Pie_
-* [`Cours_04`](https://github.com/gabays/32M7131/tree/Norm/Cours_04): Entraîner un normaliseur avec _FairSeq_
+* [`Cours_03`](https://github.com/gabays/32M7131/tree/Norm/Cours_03): Entraîner un modèle (de lemmatisation)
+* [`Cours_04`](https://github.com/gabays/32M7131/tree/Norm/Cours_04): Entre normalisation et traduction
 
 ---
 ## Installation
