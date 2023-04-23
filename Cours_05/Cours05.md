@@ -52,7 +52,7 @@ P₁(w₁w₂w₃) = P(w₁)P(w₂)P(w₃)
 
 Il existe des modèles plus complexes dits "bigrammes" ou "n-grams":
 
-P₂(w₁w₂w₃) = P(w₁|#)P(w₂|w₁)P(w|w₂)
+P₂(w₁w₂w₃) = P(w₁|#)P(w₂|w₁)P(w₃|w₂)
 
 -> quelle est la probabilité que ce soit un mot w₁, étant donné le mot qui le précède w₂?
 
