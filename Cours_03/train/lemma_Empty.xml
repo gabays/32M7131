@@ -11,7 +11,7 @@
         <header name="default"/>
     </output>
     <corpora>
-        <corpus path="/content/lemma_Empty.txt" column_marker="TAB">
+        <corpus path="lemma_Empty.txt" column_marker="TAB">
             <splitter name="empty_line"/>
             <header type="default"/>
         </corpus>
